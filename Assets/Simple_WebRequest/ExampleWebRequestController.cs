@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ExampleControllerWebRequest : MonoBehaviour
+public class ExampleWebRequestController : MonoBehaviour
 {
     [Header("Url")]
     [SerializeField] private InputField m_UrlText = null; 
