@@ -1,0 +1,2 @@
+Create schematic DB: https://sqldbm.com/
+Test queries: https://sqltest.net/
