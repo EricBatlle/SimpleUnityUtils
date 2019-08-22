@@ -17,12 +17,12 @@ namespace Simple_UI
 
         private void Awake()
         {
-            confirmButton.onClick.AddListener(() => { UIController.s_Instance.OnConfirmLoginButtonClick(GetUsername(), GetPassword()); });
+            confirmButton.onClick.AddListener(() => { UIController.s_Instance.OnConfirmLoginButtonClickImpl(GetUsername(), GetPassword()); });
             registerButton.onClick.AddListener(UIController.s_Instance.OnGoRegisterButtonClick);
             loginLaterButton.onClick.AddListener(UIController.s_Instance.OnGoLoginLater);
         }
     
-        public string GetUsername()
+        private string GetUsername()
         {
             return usernameInput.text;
         }

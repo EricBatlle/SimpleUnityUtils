@@ -12,7 +12,7 @@ namespace Simple_UI
 
         private void Awake()
         {
-            backButton.onClick.AddListener(UIController.s_Instance.OnGoBackToLoginFromMainMenuButtonClick);
+            backButton.onClick.AddListener(UIController.s_Instance.OnGoBackToLoginFromMainMenuButtonClickImpl);
         }
     }
 }

@@ -19,16 +19,16 @@ namespace Simple_UI
 
         private void Awake()
         {
-            confirmRegisterButton.onClick.AddListener(() => { UIController.s_Instance.OnConfirmRegisterButtonClick(GetRegisterUserData()); });
+            confirmRegisterButton.onClick.AddListener(() => { UIController.s_Instance.OnConfirmRegisterButtonClickImpl(GetRegisterUserData()); });
             backButton.onClick.AddListener(UIController.s_Instance.OnGoBackToLoginFromRegisterButtonClick);
         }
 
-        private User GetRegisterUserData()
+        protected virtual object GetRegisterUserData()
         {
             string username = usernameInput.text;
             string password = passwordInput.text;
             string email = emailInput.text;
-            User newUser = new User(username, password, email);
+            object newUser = new User(username, password, email);
 
             return newUser;
         }
