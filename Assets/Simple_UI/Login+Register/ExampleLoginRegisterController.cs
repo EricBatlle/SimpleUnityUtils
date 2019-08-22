@@ -62,8 +62,7 @@ namespace Simple_UI
 
         private void SetDebugInformation()
         {
-            this.debugInformationText.text =
-                "DEBUG INFORMATION \n";
+            this.debugInformationText.text = "DEBUG INFORMATION \n";
 
             if (this.currentUser != null)
             {

@@ -6,9 +6,9 @@ namespace Simple_UI
     public class UIController : Singleton<UIController>
     {
         [Header("UIComponents")]
-        [SerializeField] private Login login = null;    
-        [SerializeField] private Register register = null;    
-        [SerializeField] private MainMenu mainMenu = null;
+        [SerializeField] protected Login login = null;    
+        [SerializeField] protected Register register = null;    
+        [SerializeField] protected MainMenu mainMenu = null;
     
         public void StartUI(Action<string> OnSuccess = null)
         {
@@ -125,9 +125,14 @@ namespace Simple_UI
         
             return false;
         }
+        //Overload for DB porpouse
+        protected virtual bool VerifyRegister(string result)
+        {
+            return false;
+        }
         #endregion
         #region MAINMENU
-        public void OnGoBackToLoginFromMainMenuButtonClick()
+        public virtual void OnGoBackToLoginFromMainMenuButtonClick()
         {
             CloseMainMenu();
             OpenLogin();
