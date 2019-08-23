@@ -649,6 +649,21 @@ PrefabInstance:
       propertyPath: m_Pivot.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6244585243576589017, guid: eea8ead15d6b95646b6ebb44c615119c,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6244585244585332696, guid: eea8ead15d6b95646b6ebb44c615119c,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 655354213856522282, guid: eea8ead15d6b95646b6ebb44c615119c,
+        type: 3}
+      propertyPath: m_Name
+      value: SignOut_btn
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: eea8ead15d6b95646b6ebb44c615119c, type: 3}
 --- !u!114 &6895415780963322929 stripped
