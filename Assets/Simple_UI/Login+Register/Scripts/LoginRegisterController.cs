@@ -71,8 +71,8 @@ namespace Simple_UI
             OpenRegister();
         }
         //Abstract Implementations
-        abstract public void OnConfirmLoginButtonClickImpl(string username, string password);
-        abstract protected bool VerifyLoginImpl(string username, string password);
+        abstract public void OnConfirmLoginButtonClickImpl(params string[] loginParams);
+        abstract protected bool VerifyLoginImpl(params string[] loginParams);
         #endregion
         #region REGISTER                
         public void OnGoBackToLoginFromRegisterButtonClick()

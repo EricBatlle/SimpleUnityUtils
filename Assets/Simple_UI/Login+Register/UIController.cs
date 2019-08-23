@@ -6,8 +6,11 @@ namespace Simple_UI
     public class UIController : LoginRegisterController
     {
         #region LOGIN
-        public override void OnConfirmLoginButtonClickImpl(string username, string password)
+        public override void OnConfirmLoginButtonClickImpl(params string[] loginParams)
         {
+            string username = loginParams[0];
+            string password = loginParams[1];
+
             if (VerifyLoginImpl(username, password))
             {
                 ExampleLoginRegisterController.s_Instance.SetCurrentUser(username, password);
@@ -16,8 +19,11 @@ namespace Simple_UI
             }
         }
 
-        protected override bool VerifyLoginImpl(string username, string password)
+        protected override bool VerifyLoginImpl(params string[] loginParams)
         {
+            string username = loginParams[0];
+            string password = loginParams[1];
+
             //Check if the username exists and if it match with their password
             if (ExampleLoginRegisterController.s_Instance.VerifyIfUsernameMatchPassword(username, password))
             {
