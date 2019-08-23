@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.IO;
+using System;
 
 /// <summary>
 /// ToDo:
@@ -14,6 +15,7 @@ using System.IO;
 // ffmpeg -i screen_3840x2160_%d.ppm -y test.avi
 public class ScreenRecorder : MonoBehaviour
 {
+    public Action<byte[]> OnTakeScreenshot = null;
     #region Variables
     public Camera cameraShooter = null;
     // custom keys to activate recording or screenshot
@@ -113,6 +115,9 @@ public class ScreenRecorder : MonoBehaviour
             Debug.Log(string.Format("Wrote screenshot {0} of size {1}", filename, fileData.Length));
         }).Start();
 
+        //OnTakeScreenshot
+        OnTakeScreenshot(fileData);
+
         // unhide optional game object if set
         if (hideGameObject != null) hideGameObject.SetActive(true);
 
@@ -171,11 +176,5 @@ public class ScreenRecorder : MonoBehaviour
 
         // return unique filename
         return filename;
-    }
-
-    public void CaptureScreenshot()
-    {
-        captureScreenshot = true;
-    }
-
+    }    
 }

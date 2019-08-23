@@ -3,7 +3,7 @@ using UnityEditor;
 using UnityEngine;
 
 [CustomEditor(typeof(DBController))]
-public class DBControllerEditor : Editor
+public class DBImageControllerEditor : Editor
 {
     [Header("Post New User")]
     [SerializeField] public string username = "defaultUserName";
@@ -29,8 +29,7 @@ public class DBControllerEditor : Editor
 
         if (GUILayout.Button("Clean DB"))
             dbController.CleanDB();
-        GUILayout.Space(20f);        
+        GUILayout.Space(20f);
         #endregion
-    }
-
+    }    
 }
