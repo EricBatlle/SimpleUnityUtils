@@ -12,6 +12,7 @@ public static class JsonManager
         public T[] array = null;
     }
 
+    #region Deserialize
     public static T[] DeserializeFromJsonArray<T>(string json)
     {
         string newJson = "{ \"array\": " + json + "}";
@@ -22,7 +23,9 @@ public static class JsonManager
     {
         return JsonUtility.FromJson<T>(jsonInfo);
     }
+    #endregion
 
+    #region Serialize
     public static string SerializeToJson<T>(T objectToSerialize)
     {
         return JsonUtility.ToJson(objectToSerialize);
@@ -33,4 +36,5 @@ public static class JsonManager
         wrapper.array = array;
         return JsonUtility.ToJson(wrapper);
     }
+    #endregion
 }

@@ -1,38 +1,41 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-public class Register : MonoBehaviour
+namespace Simple_UI
 {
-    [Header("Register Fields")]
-    [SerializeField] private InputField usernameInput = null;
-    [SerializeField] private InputField passwordInput = null;
-    [SerializeField] private InputField emailInput = null;
-
-    [Header("Display Information")]
-    [SerializeField] private Text infoText = null;
-
-    [Header("Buttons")]
-    [SerializeField] private Button confirmRegisterButton = null;
-    [SerializeField] private Button backButton = null;
-
-    private void Awake()
+    public class Register : MonoBehaviour
     {
-        confirmRegisterButton.onClick.AddListener(() => { UIController.s_Instance.OnConfirmRegisterButtonClick(GetRegisterUserData()); });
-        backButton.onClick.AddListener(UIController.s_Instance.OnGoBackToLoginFromRegisterButtonClick);
-    }
+        [Header("Register Fields")]
+        [SerializeField] private InputField usernameInput = null;
+        [SerializeField] private InputField passwordInput = null;
+        [SerializeField] private InputField emailInput = null;
 
-    private User GetRegisterUserData()
-    {
-        string username = usernameInput.text;
-        string password = passwordInput.text;
-        string email = emailInput.text;
-        User newUser = new User(username, password, email);
+        [Header("Display Information")]
+        [SerializeField] private Text infoText = null;
 
-        return newUser;
-    }
+        [Header("Buttons")]
+        [SerializeField] private Button confirmRegisterButton = null;
+        [SerializeField] private Button backButton = null;
 
-    public void SetInformationPanel(string newInfo)
-    {
-        this.infoText.text = newInfo;
+        private void Awake()
+        {
+            confirmRegisterButton.onClick.AddListener(() => { UIController.s_Instance.OnConfirmRegisterButtonClickImpl(GetRegisterUserData()); });
+            backButton.onClick.AddListener(UIController.s_Instance.OnGoBackToLoginFromRegisterButtonClick);
+        }
+
+        protected virtual object GetRegisterUserData()
+        {
+            string username = usernameInput.text;
+            string password = passwordInput.text;
+            string email = emailInput.text;
+            object newUser = new User(username, password, email);
+
+            return newUser;
+        }
+
+        public void SetInformationPanel(string newInfo)
+        {
+            this.infoText.text = newInfo;
+        }
     }
 }

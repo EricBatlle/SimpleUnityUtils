@@ -3,13 +3,16 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class MainMenu : MonoBehaviour
+namespace Simple_UI
 {
-    [Header("Buttons")]
-    [SerializeField] private Button backButton = null;
-
-    private void Awake()
+    public class MainMenu : MonoBehaviour
     {
-        backButton.onClick.AddListener(UIController.s_Instance.OnGoBackToLoginFromMainMenuButtonClick);
+        [Header("Buttons")]
+        [SerializeField] private Button backButton = null;
+
+        private void Awake()
+        {
+            backButton.onClick.AddListener(UIController.s_Instance.OnGoBackToLoginFromMainMenuButtonClickImpl);
+        }
     }
 }
