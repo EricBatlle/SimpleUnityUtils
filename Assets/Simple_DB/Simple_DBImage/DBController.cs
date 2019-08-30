@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace Simple_DBImage
@@ -10,7 +8,6 @@ namespace Simple_DBImage
     /// 
     /// !!!!!WARNING!!!!
     /// THIS SCRIPT REQUIRES THE Simple_WebRequest scripts!
-    /// THIS SCRIPT REQUIRES THE Simple_ScreenRecorder scripts!
     /// </summary>
     public class DBController : Singleton<DBController>
     {
@@ -24,6 +21,7 @@ namespace Simple_DBImage
             string url = phpFilesServer + "CleanDB.php";
             WebController.s_Instance.GetWebRequest(url, OnSuccess);
         }
+        //Get the last image saved on the DB
         public void GetImage(Action<string> OnSuccess = null)
         {
             string url = phpFilesServer + "GetImage.php";
@@ -32,12 +30,12 @@ namespace Simple_DBImage
         #endregion
 
         #region POST       
+        //Post new image to the DB
         public void PostNewImage(Action<string> OnSuccess = null, byte[] imageBytes = null)
         {
             string url = phpFilesServer + "GenerateNewImage.php";
-            WebController.s_Instance.PostWebRequest(url, (result) => { print(result); }, new FormField("fileUpload", imageBytes));
+            WebController.s_Instance.PostWebRequest(url, OnSuccess, new FormField("fileUpload", imageBytes));
         }        
-        #endregion
-        
+        #endregion        
     }
 }

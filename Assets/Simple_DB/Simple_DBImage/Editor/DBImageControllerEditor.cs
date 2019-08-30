@@ -5,6 +5,8 @@ using UnityEngine;
 [CustomEditor(typeof(DBController))]
 public class DBControllerEditor : Editor
 {
+    [SerializeField] public byte[] imageData = null;
+
     public override void OnInspectorGUI()
     {
         base.OnInspectorGUI();
@@ -15,7 +17,7 @@ public class DBControllerEditor : Editor
         #region Database functionalities        
         if (GUILayout.Button("Clean DB"))
             dbController.CleanDB();
-        GUILayout.Space(20f);        
+        GUILayout.Space(20f);
         #endregion
     }
 

@@ -13,7 +13,7 @@ using System;
 //
 // You can compile these images into a video using ffmpeg:
 // ffmpeg -i screen_3840x2160_%d.ppm -y test.avi
-public class ScreenRecorder : MonoBehaviour
+public class ScreenRecorder : Singleton<ScreenRecorder>
 {
     public Action<byte[]> OnTakeScreenshot = null;
     #region Variables
@@ -51,7 +51,7 @@ public class ScreenRecorder : MonoBehaviour
     private bool captureVideo = false;
     #endregion    
 
-    private void TakeScreenshot()
+    public void TakeScreenshot()
     {
         captureScreenshot = false;
 
