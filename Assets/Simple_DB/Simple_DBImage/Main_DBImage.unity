@@ -580,7 +580,7 @@ GameObject:
   m_Component:
   - component: {fileID: 804825135}
   m_Layer: 0
-  m_Name: SeeLastImage
+  m_Name: SeeFirstImage
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1254,14 +1254,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   takeScreenshotBtn: {fileID: 1541210657}
-  seeLastImageBtn: {fileID: 1699267290}
+  seeFirstImageBtn: {fileID: 1699267290}
   displayImage: {fileID: 2023618324}
   seeAllImagesBtn: {fileID: 1572913870}
   displayImagePrefab: {fileID: 4079816506130295941, guid: 60ed1c022b3777a4b8c6cff4d6bc967e,
     type: 3}
   seeAllImagesLayout: {fileID: 1290904009}
   debugInformationTxt: {fileID: 1467132205}
-  imagesDB: []
 --- !u!1 &1541210655
 GameObject:
   m_ObjectHideFlags: 0
@@ -1629,7 +1628,7 @@ GameObject:
   - component: {fileID: 1699267291}
   - component: {fileID: 1699267290}
   m_Layer: 5
-  m_Name: SeeLastImage_btn
+  m_Name: SeeFirstImage_btn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -2,10 +2,6 @@
 	//Include other php files
 	include('DBConst.php');
 
-	//Variables submitted
-	//$dayID = $_POST["dayID"];
-	$imageName = "fileUpload.dat";
-
 	//Create DB connection
 	$conn = new mysqli($GLOBALS['serverName'], $GLOBALS['username'], $GLOBALS['password'], $GLOBALS['dbname']);
 
@@ -23,8 +19,10 @@
 	//Manage Query response
 	if($result->num_rows > 0)
 	{	
-		$row = mysqli_fetch_array($result);			
-		echo WebResponse::$OK . WebResponse::$SEPARATOR . base64_encode($row["imageData"]);
+		$row = mysqli_fetch_assoc($result);	
+		$row["imageData"] = base64_encode($row["imageData"]);
+		var_dump($row);
+		echo WebResponse::$OK . WebResponse::$SEPARATOR . json_encode($row);
 	}
 	else
 	{
