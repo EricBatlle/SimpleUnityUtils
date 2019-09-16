@@ -27,6 +27,12 @@ namespace Simple_DBImage
             string url = phpFilesServer + "GetImage.php";
             WebController.s_Instance.GetWebRequest(url, OnSuccess);
         }
+        public void GetAllImages(Action<string> OnSuccess = null)
+        {
+            string url = phpFilesServer + "GetAllImages.php";
+            WebController.s_Instance.GetWebRequest(url, OnSuccess);
+        }
+
         #endregion
 
         #region POST       

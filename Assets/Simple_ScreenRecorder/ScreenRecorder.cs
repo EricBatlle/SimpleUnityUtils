@@ -115,7 +115,6 @@ public class ScreenRecorder : Singleton<ScreenRecorder>
             Debug.Log(string.Format("Wrote screenshot {0} of size {1}", filename, fileData.Length));
         }).Start();
 
-        //OnTakeScreenshot
         OnTakeScreenshot(fileData);
 
         // unhide optional game object if set

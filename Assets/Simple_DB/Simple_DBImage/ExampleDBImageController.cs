@@ -14,8 +14,13 @@ namespace Simple_DBImage
     public class ExampleDBImageController : Singleton<ExampleDBImageController>
     {
         [SerializeField] private Button takeScreenshotBtn = null;
-        [SerializeField] private Button seeLastImageBtn = null;
+        [Header("See First Image")]
+        [SerializeField] private Button seeFirstImageBtn = null;
         [SerializeField] private RawImage displayImage = null;
+        [Header("See All Images")]
+        [SerializeField] private Button seeAllImagesBtn = null;
+        [SerializeField] private GameObject displayImagePrefab = null;
+        [SerializeField] private GameObject seeAllImagesLayout = null;
         [Header("Debug")]
         [SerializeField] private Text debugInformationTxt = null;
 
@@ -25,21 +30,54 @@ namespace Simple_DBImage
             ScreenRecorder.s_Instance.OnTakeScreenshot = SaveImgOnDB;
 
             takeScreenshotBtn.onClick.AddListener(ScreenRecorder.s_Instance.TakeScreenshot);
-            seeLastImageBtn.onClick.AddListener(SeeLastImageSavedOnDB);
+            seeFirstImageBtn.onClick.AddListener(SeeFirstImageSavedOnDB);
+            seeAllImagesBtn.onClick.AddListener(SeeAllImagesSavedOnDB);
         }
         
-        private void SeeLastImageSavedOnDB()
+        private void SeeFirstImageSavedOnDB()
         {
             DBController.s_Instance.GetImage((result) => 
             {                
                 if (WebResponse.isResultOk(result))
                 {
                     debugInformationTxt.text = "Displaying Image";
+                    //Deserialize image
                     string imageDataResult = WebResponse.GetResponseInfo(result);
-                    byte[] imageBytes = System.Convert.FromBase64String(imageDataResult);
+                    ImageDB imageDB = JsonManager.DeserializeFromJson<ImageDB>(imageDataResult);
+
+                    //Create texture and assign it to the displayImage
                     Texture2D tex = new Texture2D(2, 2);
-                    tex.LoadImage(imageBytes);
+                    tex.LoadImage(imageDB.ImageDataBytes);                    
                     displayImage.texture = tex;
+                }
+                else
+                    debugInformationTxt.text = "There is no Image saved yet on DB";
+            });
+        }
+
+        private void SeeAllImagesSavedOnDB()
+        {
+            DBController.s_Instance.GetAllImages((result) => 
+            {
+                if(WebResponse.isResultOk(result))
+                {
+                    debugInformationTxt.text = "Displaying All Images";
+                    //Deserialize all images
+                    string imagesDataResult = WebResponse.GetResponseInfo(result);
+                    ImageDB[] imagesDB = JsonManager.DeserializeFromJsonArray<ImageDB>(imagesDataResult);
+                    
+                    //Create the matrix of displayImages
+                    foreach (ImageDB imageDB in imagesDB)
+                    {
+                        //Create texture 
+                        Texture2D tex = new Texture2D(2, 2);
+                        tex.LoadImage(imageDB.ImageDataBytes);
+                        //Create displayImage and assign the texture
+                        GameObject newDisplayImage = Instantiate(displayImagePrefab);
+                        newDisplayImage.GetComponent<RawImage>().texture = tex;
+                        //Assign displayImage to the imagesLayout
+                        newDisplayImage.transform.SetParent(this.seeAllImagesLayout.transform);
+                    }
                 }
                 else
                     debugInformationTxt.text = "There is no Image saved yet on DB";
