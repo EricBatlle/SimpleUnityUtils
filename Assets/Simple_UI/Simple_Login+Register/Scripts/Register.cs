@@ -3,8 +3,19 @@ using UnityEngine.UI;
 
 namespace Simple_UI
 {
+    /// <summary>
+    /// Class in charge of implementing Register buttons events and get information from the Register form
+    /// </summary>
     public class Register : MonoBehaviour
     {
+        //Used to let inheritance and abstraction works and set events when the controller is assigned
+        [SerializeField] private LoginRegisterController lrController = null;
+        public LoginRegisterController LRController
+        {
+            get { return lrController; }
+            set { lrController = value; SetOnClickEvents(); }   //assign new value and set button OnclickEvents
+        }
+
         [Header("Register Fields")]
         [SerializeField] private InputField usernameInput = null;
         [SerializeField] private InputField passwordInput = null;
@@ -17,10 +28,10 @@ namespace Simple_UI
         [SerializeField] private Button confirmRegisterButton = null;
         [SerializeField] private Button backButton = null;
 
-        private void Awake()
+        private void SetOnClickEvents()
         {
-            confirmRegisterButton.onClick.AddListener(() => { UIController.s_Instance.OnConfirmRegisterButtonClickImpl(GetRegisterUserData()); });
-            backButton.onClick.AddListener(UIController.s_Instance.OnGoBackToLoginFromRegisterButtonClick);
+            confirmRegisterButton.onClick.AddListener(() => { LRController.OnConfirmRegisterButtonClickImpl(GetRegisterUserData()); });
+            backButton.onClick.AddListener(LRController.OnGoBackToLoginFromRegisterButtonClick);
         }
 
         protected virtual object GetRegisterUserData()

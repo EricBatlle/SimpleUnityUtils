@@ -208,6 +208,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 75ab294fbe15dc94da999f07defffe68, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  lrController: {fileID: 0}
   backButton: {fileID: 655354213856522280}
 --- !u!1 &655354213856522282
 GameObject:
@@ -1658,6 +1659,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 683184c371514b44691eeb40cfd4e0c4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  lrController: {fileID: 0}
   usernameInput: {fileID: 6244585243283032942}
   passwordInput: {fileID: 6244585243787649202}
   infoText: {fileID: 6244585243500332344}
@@ -1941,8 +1943,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 6244585243787649203}
   m_TextComponent: {fileID: 6244585244967163845}
   m_Placeholder: {fileID: 6244585243786886062}
-  m_ContentType: 0
-  m_InputType: 0
+  m_ContentType: 7
+  m_InputType: 2
   m_AsteriskChar: 42
   m_KeyboardType: 0
   m_LineType: 0
@@ -3337,6 +3339,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c6b3042bb7183c4aa7980bff5edad4e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  lrController: {fileID: 0}
   usernameInput: {fileID: 6244585244715490066}
   passwordInput: {fileID: 6244585244059706740}
   emailInput: {fileID: 6244585244248377556}

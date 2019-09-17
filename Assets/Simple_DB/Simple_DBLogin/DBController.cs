@@ -7,9 +7,6 @@ namespace Simple_DB
 {
     /// <summary>
     /// This class makes all the calls to the php files which at the same time deals with DB queries petitions
-    /// 
-    /// !!!!!WARNING!!!!
-    /// THIS SCRIPT REQUIRES THE Simple_WebRequest scripts!
     /// </summary>
     public class DBController : Singleton<DBController>
     {

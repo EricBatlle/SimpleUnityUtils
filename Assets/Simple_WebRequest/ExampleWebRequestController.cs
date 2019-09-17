@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+/// <summary>
+/// Example Controller to illustrate how Simple_WebRequest works
+/// </summary>
 public class ExampleWebRequestController : MonoBehaviour
 {
     [Header("Url")]

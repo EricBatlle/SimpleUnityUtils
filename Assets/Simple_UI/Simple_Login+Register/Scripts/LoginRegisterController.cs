@@ -1,8 +1,13 @@
-﻿using System;
+﻿using Simple_UI;
+using System;
 using UnityEngine;
 
 namespace Simple_UI
 {
+    /// <summary>
+    /// Abstract class to control the whole Login and Register system.
+    /// Prepared with several abstract methods to let the inheritated class implement login and register verifications.
+    /// </summary>
     public abstract class LoginRegisterController : Singleton<LoginRegisterController>
     {
         [Header("UIComponents")]
@@ -10,8 +15,15 @@ namespace Simple_UI
         [SerializeField] protected Register register = null;
         [SerializeField] protected MainMenu mainMenu = null;
 
-        public void StartUI(Action<string> OnSuccess = null)
+        private void Awake()
         {
+            login.LRController = this;
+            register.LRController = this;
+            mainMenu.LRController = this;
+        }
+
+        public void StartUI(Action<string> OnSuccess = null)
+        {            
             //Close everything in case is open
             CloseMainMenu();
             CloseRegister();
@@ -64,7 +76,7 @@ namespace Simple_UI
         {
             CloseLogin();
             OpenMainMenu();
-        }        
+        }
         public void OnGoRegisterButtonClick()
         {
             CloseLogin();
@@ -85,7 +97,7 @@ namespace Simple_UI
         abstract protected bool VerifyRegisterImpl(object user);
         #endregion
         #region MAINMENU
-        abstract public void OnGoBackToLoginFromMainMenuButtonClickImpl();        
+        abstract public void OnGoBackToLoginFromMainMenuButtonClickImpl();
         #endregion
         #endregion
     }

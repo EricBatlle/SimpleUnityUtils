@@ -7,6 +7,9 @@ using UnityEngine.UI;
 
 namespace Simple_DB
 {
+    /// <summary>
+    /// Example Controller to illustrate how Simple_DBLogin works
+    /// </summary>
     public class ExampleDBController : Singleton<ExampleDBController>
     {
         [Header("Users")]

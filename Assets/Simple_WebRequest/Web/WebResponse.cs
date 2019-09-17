@@ -4,10 +4,12 @@ using UnityEngine;
 
 /// <summary>
 /// WebResponse manage if the responses from WebRequests are correct or no
-/// !!!ATENTION: This is just an example of possible error messages, you have to match them to your backend web code!!!
 /// </summary>
 public static class WebResponse
 {
+    // !!! WARNING !!!
+    // This is just an example of possible error messages, you have to match them to your backend web code!!!
+    // !!! WARNING !!!
     private static string ERROR_HEADER = "ERROR: ";
     private static string SEPARATOR = "|";
 

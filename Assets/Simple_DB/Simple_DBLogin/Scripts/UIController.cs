@@ -1,11 +1,7 @@
 ﻿namespace Simple_DB
 {
     /// <summary>
-    /// This class extends the original UIController to modify verification steps...
-    /// ...so it works with DB verifications
-    /// 
-    /// !!!!!WARNING!!!!
-    /// THIS SCRIPT REQUIRES THE Simple_UI/Simple_Login+Register scripts!
+    /// This class implements LognRegisterController methods so it works with DB verifications
     /// </summary>
     public class UIController : Simple_UI.LoginRegisterController
     {
@@ -16,8 +12,8 @@
             string password = loginParams[1];
             DBController.s_Instance.PostLoginVerify((result) =>
             {
-            if (VerifyLoginImpl(result))
-            {
+                if (VerifyLoginImpl(result))
+                {
                     string newUserDBString = WebResponse.GetResponseInfo(result);
                     UserDB newUserDB = JsonManager.DeserializeFromJson<UserDB>(newUserDBString);
                     ExampleDBController.s_Instance.SetCurrentUser(newUserDB);

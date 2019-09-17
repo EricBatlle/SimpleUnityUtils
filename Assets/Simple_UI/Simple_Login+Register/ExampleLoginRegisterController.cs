@@ -7,6 +7,9 @@ using UnityEngine.UI;
 
 namespace Simple_UI
 {
+    /// <summary>
+    /// Example Controller to illustrate how Simple_Login+Register works
+    /// </summary>
     public class ExampleLoginRegisterController : Singleton<ExampleLoginRegisterController>
     {
         [Header("Users")]

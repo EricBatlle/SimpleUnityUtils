@@ -3,6 +3,9 @@ using UnityEngine;
 
 namespace Simple_UI
 {
+    /// <summary>
+    /// This class implements LognRegisterController methods so it works with DB verifications
+    /// </summary>
     public class UIController : LoginRegisterController
     {
         #region LOGIN

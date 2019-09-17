@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// Main Controller to call and manage GET and POSTS requests
+/// Main Controller to call and manage GET and POSTS requests.
+/// Stores the requests list.
 /// </summary>
 public class WebController : Singleton<WebController>
 {
