@@ -66,6 +66,11 @@ namespace Simple_DBImage
                     string imagesDataResult = WebResponse.GetResponseInfo(result);
                     ImageDB[] imagesDB = JsonManager.DeserializeFromJsonArray<ImageDB>(imagesDataResult);
                     
+                    //Clean the matrix of displayImages
+                    foreach(Transform child in seeAllImagesLayout.transform)
+                    {
+                        Destroy(child.gameObject);
+                    }
                     //Create the matrix of displayImages
                     foreach (ImageDB imageDB in imagesDB)
                     {

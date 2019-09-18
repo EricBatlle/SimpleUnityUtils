@@ -242,15 +242,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3478fa864d1183f4499a2c474132a8fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cameraShooter: {fileID: 782485412}
   screenshotKey: 118
   videoKey: 107
   captureWidth: 1920
   captureHeight: 1080
-  hideGameObject: {fileID: 0}
-  optimizeForManyScreenshots: 1
   format: 1
+  saveScreenshotsLocally: 0
   folder: 
+  optimizeForManyScreenshots: 1
+  cameraShooter: {fileID: 782485412}
+  hideGameObject: {fileID: 0}
 --- !u!1 &391093784
 GameObject:
   m_ObjectHideFlags: 0
