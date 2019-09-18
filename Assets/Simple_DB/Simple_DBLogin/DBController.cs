@@ -11,23 +11,23 @@ namespace Simple_DB
     public class DBController : Singleton<DBController>
     {
         //[SerializeField] private static string phpFilesDirectory = "D:/xampp/htdocs/myProjectOrWhateverfoldername/";
-        [SerializeField] private static string phpFilesServer = "http://rucker/Simple_DB/";
+        [SerializeField] private string phpFilesServerLocation = "http://rucker/Simple_DB/";
         
         #region GET
         //Deletes the content of the tables, not the tables
         public void CleanDB(Action<string> OnSuccess = null)
         {
-            string url = phpFilesServer + "CleanDB.php";
+            string url = phpFilesServerLocation + "CleanDB.php";
             WebController.s_Instance.GetWebRequest(url, OnSuccess);
         }
         public void GetAllUsers(Action<string> OnSuccess = null)
         {
-            string url = phpFilesServer + "GetAllUsers.php";
+            string url = phpFilesServerLocation + "GetAllUsers.php";
             WebController.s_Instance.GetWebRequest(url, OnSuccess);
         }
         public void GetUserInfoFromID(Action<string> OnSuccess = null, int userID = 0)
         {
-            string url = phpFilesServer + "GetUserInfoFromID.php";
+            string url = phpFilesServerLocation + "GetUserInfoFromID.php";
             WebController.s_Instance.PostWebRequest(url, OnSuccess,
                 new FormField("userID", userID.ToString()));
         }        
@@ -37,14 +37,14 @@ namespace Simple_DB
         public void PostNewUser(Action<string> OnSuccess = null, User newUser = null)
         {
             string newUserString = JsonManager.SerializeToJson<User>(newUser);
-            string url = phpFilesServer + "GenerateNewUser.php";
+            string url = phpFilesServerLocation + "GenerateNewUser.php";
             WebController.s_Instance.PostWebRequest(url, OnSuccess, 
                 new FormField("newUser", newUserString));
         }
         
         public void PostLoginVerify(Action<string> OnSuccess = null, string newUsername = "defaultUsername", string newPassword = "defaultPassword")
         {
-            string url = phpFilesServer + "LoginVerify.php";
+            string url = phpFilesServerLocation + "LoginVerify.php";
             WebController.s_Instance.PostWebRequest(url, OnSuccess,
                 new FormField("newUsername", newUsername),
                 new FormField("newPassword", newPassword));
