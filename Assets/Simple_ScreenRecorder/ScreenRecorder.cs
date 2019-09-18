@@ -15,29 +15,30 @@ using System;
 // ffmpeg -i screen_3840x2160_%d.ppm -y test.avi
 public class ScreenRecorder : Singleton<ScreenRecorder>
 {
-    public Action<byte[]> OnTakeScreenshot = null;
     #region Variables
-    public Camera cameraShooter = null;
-    // custom keys to activate recording or screenshot
+    //delegate to add if any script wants to do something with byte[] image
+    public Action<byte[]> OnTakeScreenshot = null;
+
+    [Header("Custom trigger Keys")] // custom keys to activate recording or screenshot
     public KeyCode screenshotKey = KeyCode.V;
     public KeyCode videoKey = KeyCode.K;
 
-    // 4k = 3840 x 2160   1080p = 1920 x 1080
+    [Header("Screenshot Resolution")]// 4k = 3840 x 2160   1080p = 1920 x 1080
     public int captureWidth = 1920;
     public int captureHeight = 1080;
 
-    // optional game object to hide during screenshots (usually your scene canvas hud)
-    public GameObject hideGameObject;
-
-    // optimize for many screenshots will not destroy any objects so future screenshots will be fast
-    public bool optimizeForManyScreenshots = true;
-
-    // configure with raw, jpg, png, or ppm (simple raw format)
     public enum Format { RAW, JPG, PNG, PPM };
+    [Header("Screenshot Format")]                       // configure with raw, jpg, png, or ppm (simple raw format)
     public Format format = Format.PPM;
 
-    // folder to write output (defaults to data path)
-    public string folder;
+    [Header("Save Configuration")]
+    public bool saveScreenshotsLocally = true;          //if the data needs to be stored on a directory, enable that option, if only needs temporarly the data, disable it
+    public string folder;                               // folder to write output (defaults to data path)    
+    public bool optimizeForManyScreenshots = true;      // optimize for many screenshots will not destroy any objects so future screenshots will be fast       
+
+    [Header("View Configuration")]    
+    public Camera cameraShooter = null;                 //From which camera takes the shoot    
+    public GameObject hideGameObject;                   // optional game object to hide during screenshots (usually your scene canvas hud)
     #endregion
     #region _Variables
     // private vars for screenshot
@@ -83,9 +84,6 @@ public class ScreenRecorder : Singleton<ScreenRecorder>
         cameraShooter.targetTexture = null;
         RenderTexture.active = null;
 
-        // get our unique filename
-        string filename = BuildUniqueFilename((int)rect.width, (int)rect.height);
-
         // pull in our file header/data bytes for the specified image format (has to be done from main thread)
         byte[] fileHeader = null;
         byte[] fileData = null;
@@ -104,18 +102,24 @@ public class ScreenRecorder : Singleton<ScreenRecorder>
             fileData = screenShot.GetRawTextureData();
         }
 
-        // create new thread to save the image to file (only operation that can be done in background)
-        new System.Threading.Thread(() =>
+        if(saveScreenshotsLocally)
         {
-            // create file and write optional header with image bytes
-            var f = System.IO.File.Create(filename);
-            if (fileHeader != null) f.Write(fileHeader, 0, fileHeader.Length);
-            f.Write(fileData, 0, fileData.Length);
-            f.Close();
-            Debug.Log(string.Format("Wrote screenshot {0} of size {1}", filename, fileData.Length));
-        }).Start();
+            // get our unique filename
+            string filename = BuildUniqueFilename((int)rect.width, (int)rect.height);
 
-        OnTakeScreenshot(fileData);
+            // create new thread to save the image to file (only operation that can be done in background)
+            new System.Threading.Thread(() =>
+            {
+                // create file and write optional header with image bytes
+                var f = System.IO.File.Create(filename);
+                if (fileHeader != null) f.Write(fileHeader, 0, fileHeader.Length);
+                f.Write(fileData, 0, fileData.Length);
+                f.Close();
+                Debug.Log(string.Format("Wrote screenshot {0} of size {1}", filename, fileData.Length));
+            }).Start();
+        }
+
+        OnTakeScreenshot?.Invoke(fileData); //Invoke if the delegate is not empty
 
         // unhide optional game object if set
         if (hideGameObject != null) hideGameObject.SetActive(true);
