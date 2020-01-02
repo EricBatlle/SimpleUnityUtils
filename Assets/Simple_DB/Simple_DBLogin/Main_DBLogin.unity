@@ -494,6 +494,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2468dfffe4641e040b802746410c5a1a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  phpFilesServerLocation: http://rucker/Simple_DB/
 --- !u!1001 &1345372244
 PrefabInstance:
   m_ObjectHideFlags: 0
