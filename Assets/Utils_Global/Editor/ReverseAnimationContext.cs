@@ -22,7 +22,9 @@ public static class ReverseAnimationContext
         if (clip == null)
             return;
         float clipLength = clip.length;
+#pragma warning disable CS0618 // El tipo o el miembro están obsoletos
         var curves = AnimationUtility.GetAllCurves(clip, true);
+#pragma warning restore CS0618 // El tipo o el miembro están obsoletos
         clip.ClearCurves();
         foreach (AnimationClipCurveData curve in curves)
         {
