@@ -31,7 +31,7 @@ public static class JsonManager
         char jsonFirstCharacter = jsonString[0];
 
         //Return deserialized object only if the string is in json format
-        if (jsonFirstCharacter != JSON_OBJECT_FIRST_BRACKET)
+        if (jsonFirstCharacter != JSON_ARRAY_FIRST_BRACKET)
             throw new JsonFormatException();
         else
         {
