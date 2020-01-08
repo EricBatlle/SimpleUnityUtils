@@ -4,8 +4,20 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
+[Serializable]
+public class JsonFormatException:Exception
+{
+    public JsonFormatException()
+    {
+        Debug.Log("JsonFormat not valid, should start with '"+JsonManager.JSON_OBJECT_FIRST_BRACKET+"' for JsonObjects or '"+JsonManager.JSON_OBJECT_FIRST_BRACKET+"' for JsonArrayObjects");
+    }        
+}
+
 public static class JsonManager
 {
+    public static char JSON_OBJECT_FIRST_BRACKET = '{';
+    public static char JSON_ARRAY_FIRST_BRACKET = '[';
+
     //Wrapper made it to deal with Nested jsons
     [Serializable]
     private class Wrapper<T>
@@ -14,15 +26,29 @@ public static class JsonManager
     }
 
     #region Deserialize
-    public static T[] DeserializeFromJsonArray<T>(string json)
+    public static T[] DeserializeFromJsonArray<T>(string jsonString)
     {
-        string newJson = "{ \"array\": " + json + "}";
-        Wrapper<T> wrapper = JsonUtility.FromJson<Wrapper<T>>(newJson);
-        return wrapper.array;
+        char jsonFirstCharacter = jsonString[0];
+
+        //Return deserialized object only if the string is in json format
+        if (jsonFirstCharacter != JSON_OBJECT_FIRST_BRACKET)
+            throw new JsonFormatException();
+        else
+        {
+            string newJson = "{ \"array\": " + jsonString + "}";
+            Wrapper<T> wrapper = JsonUtility.FromJson<Wrapper<T>>(newJson);
+            return wrapper.array;
+        }            
     }
-    public static T DeserializeFromJson<T>(string jsonInfo)
+    public static T DeserializeFromJson<T>(string jsonString)
     {
-        return JsonUtility.FromJson<T>(jsonInfo);
+        char jsonFirstCharacter = jsonString[0];
+
+        //Return deserialized object only if the string is in json format
+        if (jsonFirstCharacter != JSON_OBJECT_FIRST_BRACKET)        
+            throw new JsonFormatException();                
+        else        
+            return JsonUtility.FromJson<T>(jsonString);               
     }
     #endregion
 
@@ -31,10 +57,10 @@ public static class JsonManager
     {
         return JsonUtility.ToJson(objectToSerialize);
     }
-    public static string SerializeToJsonArray<T>(T[] array)
+    public static string SerializeToJsonArray<T>(T[] arrayToSerialize)
     {
         Wrapper<T> wrapper = new Wrapper<T>();
-        wrapper.array = array;
+        wrapper.array = arrayToSerialize;
         return JsonUtility.ToJson(wrapper);
     }
     #endregion
