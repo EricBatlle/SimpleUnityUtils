@@ -284,9 +284,9 @@ MonoBehaviour:
   captureHeight: 1080
   format: 1
   saveScreenshotsLocally: 1
-  folder: 
+  folder: Assets\Test
   optimizeForManyScreenshots: 1
-  cameraShooter: {fileID: 0}
+  cameraShooter: {fileID: 1738091059}
   hideGameObject: {fileID: 0}
 --- !u!1 &814174010
 GameObject:

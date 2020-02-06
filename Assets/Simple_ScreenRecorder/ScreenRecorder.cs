@@ -29,7 +29,7 @@ public class ScreenRecorder : Singleton<ScreenRecorder>
 
     public enum Format { RAW, JPG, PNG, PPM };
     [Header("Screenshot Format")]                       // configure with raw, jpg, png, or ppm (simple raw format)
-    public Format format = Format.PPM;
+    public Format format = Format.JPG;
 
     [Header("Save Configuration")]
     public bool saveScreenshotsLocally = true;          //if the data needs to be stored on a directory, enable that option, if only needs temporarly the data, disable it
@@ -52,6 +52,7 @@ public class ScreenRecorder : Singleton<ScreenRecorder>
     private bool captureVideo = false;
     #endregion    
 
+    [ContextMenu("TakeScreenshot")]
     public void TakeScreenshot()
     {
         captureScreenshot = false;
@@ -111,7 +112,7 @@ public class ScreenRecorder : Singleton<ScreenRecorder>
             new System.Threading.Thread(() =>
             {
                 // create file and write optional header with image bytes
-                var f = System.IO.File.Create(filename);
+                var f = File.Create(filename);
                 if (fileHeader != null) f.Write(fileHeader, 0, fileHeader.Length);
                 f.Write(fileData, 0, fileData.Length);
                 f.Close();
@@ -169,6 +170,13 @@ public class ScreenRecorder : Singleton<ScreenRecorder>
             // count number of files of specified format in folder
             string mask = string.Format("screen_{0}x{1}*.{2}", width, height, format.ToString().ToLower());
             counter = Directory.GetFiles(folder, mask, SearchOption.TopDirectoryOnly).Length;
+        }
+
+        //Check if storingPath exists, if not, create the directories and subdirectories
+        if (!Directory.Exists(folder))
+        {
+            Debug.Log(string.Format("Path directory {0} does not exist, created now.", folder));
+            Directory.CreateDirectory(folder);
         }
 
         // use width, height, and counter for unique file name
