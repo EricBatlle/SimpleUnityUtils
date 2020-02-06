@@ -1,16 +1,14 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
 [Serializable]
-public class JsonFormatException:Exception
+public class JsonFormatException : Exception
 {
     public JsonFormatException()
     {
-        Debug.Log("JsonFormat not valid, should start with '"+JsonManager.JSON_OBJECT_FIRST_BRACKET+"' for JsonObjects or '"+JsonManager.JSON_OBJECT_FIRST_BRACKET+"' for JsonArrayObjects");
-    }        
+        Debug.Log("JsonFormat not valid, should start with '" + JsonManager.JSON_OBJECT_FIRST_BRACKET + "' for JsonObjects or '" + JsonManager.JSON_OBJECT_FIRST_BRACKET + "' for JsonArrayObjects");
+    }
 }
 
 public static class JsonManager
@@ -23,6 +21,12 @@ public static class JsonManager
     private class Wrapper<T>
     {
         public T[] array = null;
+    }
+
+    public static string GetJsonContentAsString(string jsonFileName)
+    {
+        string path = Application.dataPath + "/" + jsonFileName + ".json";
+        return File.ReadAllText(path);
     }
 
     #region Deserialize
@@ -38,17 +42,17 @@ public static class JsonManager
             string newJson = "{ \"array\": " + jsonString + "}";
             Wrapper<T> wrapper = JsonUtility.FromJson<Wrapper<T>>(newJson);
             return wrapper.array;
-        }            
+        }
     }
     public static T DeserializeFromJson<T>(string jsonString)
     {
         char jsonFirstCharacter = jsonString[0];
 
         //Return deserialized object only if the string is in json format
-        if (jsonFirstCharacter != JSON_OBJECT_FIRST_BRACKET)        
-            throw new JsonFormatException();                
-        else        
-            return JsonUtility.FromJson<T>(jsonString);               
+        if (jsonFirstCharacter != JSON_OBJECT_FIRST_BRACKET)
+            throw new JsonFormatException();
+        else
+            return JsonUtility.FromJson<T>(jsonString);
     }
     #endregion
 
@@ -69,6 +73,14 @@ public static class JsonManager
     //Write to JSON
     public static void WriteJSONFile(string fileName, string content, string storingPath = "Assets")
     {
+        //Check if storingPath exists, if not, create the directories and subdirectories
+        if (!Directory.Exists(storingPath))
+        {
+            Debug.Log(string.Format("Path directory {0} does not exist, created now.", storingPath));
+            Directory.CreateDirectory(storingPath);
+        }
+
+        //Give the fileName an index in case the name already exists file--> file_1
         string completePath = storingPath + "/" + fileName + ".json";
         string newFilename = fileName + "_";
         int i = 0;
@@ -82,6 +94,7 @@ public static class JsonManager
             i++;
         } while (File.Exists(completePath));
 
+        //Write the JSON file
         StreamWriter writer = new StreamWriter(completePath, true);
         writer.Write(content);
         writer.Close();
