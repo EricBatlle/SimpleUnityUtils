@@ -1,0 +1,6 @@
+D:\User_Eric\Workspaces\VisualStudio2017_Workspace\HelloWorldSharp\HelloWorldSharp\bin\Debug\HelloWorldSharp.exe.config
+D:\User_Eric\Workspaces\VisualStudio2017_Workspace\HelloWorldSharp\HelloWorldSharp\bin\Debug\HelloWorldSharp.exe
+D:\User_Eric\Workspaces\VisualStudio2017_Workspace\HelloWorldSharp\HelloWorldSharp\bin\Debug\HelloWorldSharp.pdb
+D:\User_Eric\Workspaces\VisualStudio2017_Workspace\HelloWorldSharp\HelloWorldSharp\obj\Debug\HelloWorldSharp.csproj.CoreCompileInputs.cache
+D:\User_Eric\Workspaces\VisualStudio2017_Workspace\HelloWorldSharp\HelloWorldSharp\obj\Debug\HelloWorldSharp.exe
+D:\User_Eric\Workspaces\VisualStudio2017_Workspace\HelloWorldSharp\HelloWorldSharp\obj\Debug\HelloWorldSharp.pdb
