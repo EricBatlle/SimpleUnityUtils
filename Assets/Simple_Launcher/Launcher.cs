@@ -1,80 +1,94 @@
 ﻿using System;
 using System.Diagnostics;
-using System.IO;
-using System.Text;
 using UnityEngine;
 
 [ExecuteInEditMode]
 public class Launcher : MonoBehaviour
 {
-    public string exeName = "ConsoleApp1.exe";
-    public string[] arguments = new string[0];
+    [SerializeField] private string exePath = "ConsoleApp1.exe";
+    [SerializeField] private string[] arguments = new string[0];
     [Space()]
-    [Tooltip("if true, can use ReadKey, you cannot use it if false cause there is no shell to read the key")]
+    [Tooltip("if true, it is possible to use ReadKey. If false, it is not recommended, cause there is no shell to read the key")]
     [SerializeField] private bool useShellExecute = true;
     [Tooltip("if you want the child process to write output to its own console, set to false")]
-    [SerializeField] private bool redirectStandardOutput = false;
-    [SerializeField] private bool redirectStandardInput = false;
-    [SerializeField] private bool redirectStandardError = false;
+    [SerializeField] private bool redirectStandardOutput = false;   //It requires to use shellExecute = false
+    [SerializeField] private bool redirectStandardInput = false;    //It requires to use shellExecute = false
+    [SerializeField] private bool redirectStandardError = false;    //It requires to use shellExecute = false
 
     private Process process = null;
-    private static StringBuilder output = new StringBuilder();
 
     [ContextMenu("Start Process")]
     public void StartProcess()
     {
         try
         {
+            //Create new process
             process = new Process();
-            process.EnableRaisingEvents = false;
-            process.StartInfo.FileName = Application.dataPath + "/" + exeName;  //Assets/exeName
+            process.StartInfo.FileName = Application.dataPath + "/" + exePath;  //Assets/exeName
 
+            //Pass arguments as a single string with spaces on each argument
             string compactedArguments = "";
             foreach (string arg in arguments)
             {
                 compactedArguments += arg + " ";
             }
-
+            
+            //Set process arguments
             process.StartInfo.Arguments = compactedArguments;
-            process.StartInfo.UseShellExecute = useShellExecute;                //if true, can use ReadKey, you cannot use it if false cause there is no shell to read the key
-            process.StartInfo.RedirectStandardOutput = redirectStandardOutput;  //if you want the child process to write output to its own console, set to false
+            
+            process.StartInfo.UseShellExecute = useShellExecute;
+            //Set process StandardRedirections
+            process.StartInfo.RedirectStandardOutput = redirectStandardOutput;
             process.StartInfo.RedirectStandardError = redirectStandardError;
             process.StartInfo.RedirectStandardInput = redirectStandardInput;
+            
+            //Set process Exited handler
             process.EnableRaisingEvents = true;
-
+            process.Exited += OnProcessEnds;
+            //Set process output and error handlers
             process.OutputDataReceived += OutputDataReceived;
             process.ErrorDataReceived += ErrorDataReceived;
 
+            //Start and wait the process to end
             process.Start();
-            process.WaitForExit();
+            //process.WaitForExit();    //This will block the main thread
+
+            //Async reading
             process.BeginOutputReadLine();
             process.BeginErrorReadLine();
-
-            UnityEngine.Debug.Log("Successfully launched app with output" + output);
         }
         catch (Exception e)
-        {
-            UnityEngine.Debug.LogError("Unable to launch app: " + e.Message);
+        {            
+            UnityEngine.Debug.LogError(e.Message);
         }
     }
-    public void StartProcess(params string[] arguments)
+    public void StartProcess(string exePath, params string[] arguments)
     {
+        this.exePath = exePath;
         this.arguments = new string[arguments.Length];
         this.arguments = arguments;
         this.StartProcess();
     }
 
+
     void OutputDataReceived(object sender, DataReceivedEventArgs e)
     {
-        // Process line provided in e.Data
-        UnityEngine.Debug.Log(e.ToString());
-        UnityEngine.Debug.Log("dataReceived " + e.Data);
-        System.Diagnostics.Debug.WriteLine("dataReceived " + e.Data);
+        UnityEngine.Debug.Log(e.Data);
     }
 
+    //Handle possible Errors recived from the external process
     void ErrorDataReceived(object sender, DataReceivedEventArgs e)
     {
-        // Process line provided in e.Data
-        UnityEngine.Debug.LogError("error: " + e.Data);
+        if(!String.IsNullOrEmpty(e.Data))
+            UnityEngine.Debug.LogError(e.Data);
+    }
+
+    // Handle Exited event and display process information.
+    private void OnProcessEnds(object sender, System.EventArgs e)
+    {
+        UnityEngine.Debug.Log(
+            $"Exit time    : {process.ExitTime}\n" +
+            $"Exit code    : {process.ExitCode}\n" +
+            $"Elapsed time : {Math.Round((process.ExitTime - process.StartTime).TotalMilliseconds)}");
     }
 }
