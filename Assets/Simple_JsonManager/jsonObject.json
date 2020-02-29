@@ -1,0 +1,23 @@
+{
+	"intVariable": 1,
+	"floatVariable": 1.405,
+	"stringVariable": "stringText",	
+	"vector2Variable": {
+		"x": 1,
+		"y": 0
+	},
+	"jsonStructVariable": {
+		"firstVariable": 1,
+		"secondVariable": 2
+	},	
+	"arrayVariable": [
+		{
+			"firstVariable": 1,
+			"secondVariable": 2
+		},
+		{
+			"firstVariable": 1,
+			"secondVariable": 2
+		}
+	]	
+}

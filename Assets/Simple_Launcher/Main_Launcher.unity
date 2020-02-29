@@ -555,7 +555,7 @@ GameObject:
   - component: {fileID: 1440657617}
   - component: {fileID: 1440657618}
   m_Layer: 0
-  m_Name: LauncherController
+  m_Name: ExampleController_LauncherController
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
