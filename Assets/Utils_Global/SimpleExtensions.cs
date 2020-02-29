@@ -8,6 +8,7 @@ using UnityEngine;
 /// </summary>
 public static class SimpleExtensions
 {
+    #region MonoBehaviour
     //Invoke
     public static void Invoke(this MonoBehaviour mono, Action action, float delay)
     {
@@ -34,4 +35,15 @@ public static class SimpleExtensions
             yield return new WaitForSeconds(repeatRate);
         }
     }
+    #endregion
+
+    #region Enums
+    //Short way to get enum int value as a string
+    public static string toValueString<T>(this T enumVar) where T : IComparable, IFormattable, IConvertible
+    {
+        if (!typeof(T).IsEnum)
+            throw new ArgumentException("cast requires enum type");
+        return ((int)(object)enumVar).ToString();
+    }
+    #endregion
 }
