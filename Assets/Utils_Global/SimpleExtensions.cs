@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.UI;
 
 /// <summary>
 /// This class collects all the extensions used to improve or facilitate the use of in-build methods
@@ -37,13 +38,38 @@ public static class SimpleExtensions
     }
     #endregion
 
-    #region Enums
+    #region Enum
     //Short way to get enum int value as a string
     public static string toValueString<T>(this T enumVar) where T : IComparable, IFormattable, IConvertible
     {
         if (!typeof(T).IsEnum)
             throw new ArgumentException("cast requires enum type");
         return ((int)(object)enumVar).ToString();
+    }
+    #endregion
+
+    #region Color
+    public static void SetAlpha(this RawImage rawImage, float alphaValue)
+    {
+        if (alphaValue > 1)
+            alphaValue /= 255;
+        if (alphaValue < 0)
+            alphaValue = 0;
+
+        Color auxColor = rawImage.color;
+        auxColor.a = alphaValue;
+        rawImage.color = auxColor;
+    }
+    public static void SetAlpha(this Image image, float alphaValue)
+    {
+        if (alphaValue > 1)
+            alphaValue /= 255;
+        if (alphaValue < 0)
+            alphaValue = 0;
+
+        Color auxColor = image.color;
+        auxColor.a = alphaValue;
+        image.color = auxColor;
     }
     #endregion
 }
