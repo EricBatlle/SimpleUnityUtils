@@ -1,0 +1,15 @@
+- Project directory structure should be: Assets/Plugins/Android
+- Insert classes.jar in AndroidStudio project in app/libs
+- Insert external dependencies like "support-v4-24.1.1" into Android/libs
+- To recompile new plugin do the follow:
+	1. Rebuild AndroidStudio solution
+	2. Go To AndroidStudio solution... app\build\outputs\aar get the .aar file
+	3. Copy and paste it changing extension from .aar to .zip or .rar
+	4. Open the changed copy and extract 2 items:
+		- classes.jar (this is another classes.jar, not the same stored in app/libs)
+		- AndroidManifest.xml
+	5. Copy those files into Unity project in Assets/Plugins/Android
+
+- To create plugins on AndroidStudio you need to create a library (from an activity).
+	- Then on graddle remove ID line
+	- And change .implementation to .library
