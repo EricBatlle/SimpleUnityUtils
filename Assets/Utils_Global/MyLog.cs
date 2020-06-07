@@ -8,11 +8,18 @@ public class MyLog : MonoBehaviour
     #region CustomLogs
     public class LogStyle
     {
-        public float viewWidth = 100f;
-        public float viewHeight = 100f;
+        //Log window
+        public float viewWidth = Screen.width * 0.75f;
+        public float viewHeight = Screen.height * 0.35f;
         public int fontSize = 8;
 
-        public LogStyle(float viewWidth = 100f, float viewHeight = 100f, int fontsize = 8)
+        public LogStyle()
+        {
+            this.viewWidth = Screen.width * 0.75f;
+            this.viewHeight = Screen.height * 0.35f;
+            this.fontSize = 8;
+        }
+        public LogStyle(float viewWidth, float viewHeight, int fontsize)
         {
             this.viewWidth = viewWidth;
             this.viewHeight = viewHeight;
@@ -42,6 +49,7 @@ public class MyLog : MonoBehaviour
     private void OnEnable()
     {
         Application.logMessageReceivedThreaded += HandleLog;
+        SetPredefinedStyle(predefinedDevice);
     }
 
     private void OnDisable()
@@ -83,6 +91,7 @@ public class MyLog : MonoBehaviour
         string newString = "[" + myLogQueue.Count + "][" + time + "]: " + myLog + "\n";
         newString = "<color=#" + ColorUtility.ToHtmlStringRGBA(textColor) + ">" + newString + "</color>";
         myLogQueue.Enqueue(newString);
+
         if (type == LogType.Exception)
         {
             newString = stackTrace + "\n";
@@ -98,13 +107,24 @@ public class MyLog : MonoBehaviour
 
     private void OnGUI()
     {
-        //Set predefined styles
-        LogStyle deviceStyle = LogtypeToLogstyleDictionary[predefinedDevice];
-        fontSize = deviceStyle.fontSize;
-        viewHeight = deviceStyle.viewHeight;
-        viewWidth = deviceStyle.viewHeight;
-
         #region GUI Styles
+        //Set predefined Style if something is specified, if not, do not force it to let editor tweaking
+        if (predefinedDevice != PredefinedDevice.None)
+        {
+            SetPredefinedStyle(predefinedDevice);
+            //ToDo: make this variable and predefined...too lazy
+            //Scrollbar Style
+            if (predefinedDevice == PredefinedDevice.Pocophone)
+            {
+                GUI.skin.verticalScrollbar.fixedWidth = Screen.width * 0.05f;
+                GUI.skin.verticalScrollbarThumb.fixedWidth = GUI.skin.verticalScrollbar.fixedWidth;
+
+                GUI.skin.horizontalScrollbar.fixedWidth = viewWidth - GUI.skin.verticalScrollbar.fixedWidth;
+                GUI.skin.horizontalScrollbar.fixedHeight = Screen.height * 0.025f;
+                GUI.skin.horizontalScrollbarThumb.fixedHeight = GUI.skin.horizontalScrollbar.fixedHeight;
+            }
+        }
+
         //Buttons Style
         GUIStyle guiStyle_button = new GUIStyle(GUI.skin.button);
         guiStyle_button.fontSize = fontSize;
@@ -140,6 +160,13 @@ public class MyLog : MonoBehaviour
             }
             if (GUILayout.Button("Hide", guiStyle_button))
                 hideLog = true;
+            if (GUILayout.Button("+", guiStyle_button))
+                fontSize += 10;
+            if (GUILayout.Button("-", guiStyle_button))
+            {
+                if (fontSize > 10)
+                    fontSize -= 10;
+            }
             GUILayout.EndHorizontal();
             #endregion
             #region ScrollView
@@ -154,5 +181,13 @@ public class MyLog : MonoBehaviour
             if (GUILayout.Button("Show Log", guiStyle_button))
                 hideLog = false;
         }
+    }
+
+    private void SetPredefinedStyle(PredefinedDevice predefinedDevice)
+    {
+        LogStyle deviceStyle = LogtypeToLogstyleDictionary[predefinedDevice];
+        this.fontSize = deviceStyle.fontSize;
+        this.viewHeight = deviceStyle.viewHeight;
+        this.viewWidth = deviceStyle.viewHeight;
     }
 }
