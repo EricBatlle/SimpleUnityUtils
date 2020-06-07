@@ -1,21 +1,47 @@
 ﻿using System;
 using System.Collections;
-using UnityEditor;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class MyLog : MonoBehaviour
 {
+    #region CustomLogs
+    public class LogStyle
+    {
+        public float viewWidth = 100f;
+        public float viewHeight = 100f;
+        public int fontSize = 8;
+
+        public LogStyle(float viewWidth = 100f, float viewHeight = 100f, int fontsize = 8)
+        {
+            this.viewWidth = viewWidth;
+            this.viewHeight = viewHeight;
+            this.fontSize = fontsize;
+        }
+    }
+    public enum PredefinedDevice
+    {
+        None, Pocophone
+    }
+    public Dictionary<PredefinedDevice, LogStyle> LogtypeToLogstyleDictionary = new Dictionary<PredefinedDevice, LogStyle>()
+    {
+        { PredefinedDevice.None, new LogStyle() },
+        { PredefinedDevice.Pocophone, new LogStyle(800,800,70) }
+    };
+    #endregion
+
     [SerializeField] private bool hideLog = false;
+    [SerializeField] private PredefinedDevice predefinedDevice = PredefinedDevice.None;
     [SerializeField] private Vector2 scrollPosition = new Vector2();
     [SerializeField] private float viewWidth = 100f;
     [SerializeField] private float viewHeight = 100f;
     [SerializeField] private int fontSize = 8;
     private string myLog;
     private Queue myLogQueue = new Queue();
-   
+
     private void OnEnable()
     {
-        Application.logMessageReceivedThreaded += HandleLog;        
+        Application.logMessageReceivedThreaded += HandleLog;
     }
 
     private void OnDisable()
@@ -72,6 +98,12 @@ public class MyLog : MonoBehaviour
 
     private void OnGUI()
     {
+        //Set predefined styles
+        LogStyle deviceStyle = LogtypeToLogstyleDictionary[predefinedDevice];
+        fontSize = deviceStyle.fontSize;
+        viewHeight = deviceStyle.viewHeight;
+        viewWidth = deviceStyle.viewHeight;
+
         #region GUI Styles
         //Buttons Style
         GUIStyle guiStyle_button = new GUIStyle(GUI.skin.button);
@@ -84,7 +116,7 @@ public class MyLog : MonoBehaviour
             wordWrap = false,
             fontSize = fontSize,
             stretchWidth = true,
-            font = (Font)EditorGUIUtility.LoadRequired("Fonts/Lucida Grande.ttf"),
+            //font = (Font)EditorGUIUtility.LoadRequired("Fonts/Lucida Grande.ttf"),
             //fontStyle = FontStyle.Bold,
             padding = new RectOffset()
             {
