@@ -216,7 +216,7 @@ GameObject:
   - component: {fileID: 1022618051}
   - component: {fileID: 1022618049}
   m_Layer: 0
-  m_Name: MaskeableObject
+  m_Name: Maskeable3DObject
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

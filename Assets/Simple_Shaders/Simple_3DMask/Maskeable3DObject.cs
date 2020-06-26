@@ -7,7 +7,7 @@
 /// </summary>
 [AddComponentMenu("Rendering/SetRenderQueue")]
 [ExecuteInEditMode]
-public class MaskeableObject : MonoBehaviour
+public class Maskeable3DObject : MonoBehaviour
 {
     [SerializeField]
     protected int[] m_queues = new int[] { 4020 };
