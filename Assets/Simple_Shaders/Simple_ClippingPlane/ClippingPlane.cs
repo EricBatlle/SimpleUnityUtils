@@ -4,6 +4,7 @@ public class ClippingPlane : MonoBehaviour
 {
     [Header("Clip unique object")]
     public Renderer uniqueRenderer = null;
+    public bool clippChilds = false;
     [Header("Clip all material-shared objects")]
     [Tooltip("If it's not affecting to previous unique object, try to play and unplay scene")]
     public Material material = null;
@@ -13,11 +14,11 @@ public class ClippingPlane : MonoBehaviour
 
     private void Awake()
     {
-         /* 
-         * this will be used only if uniqueRenderer != null        
-         * but as is decleared on awake and uniqueRenderer could be modified on the inspector
-         * it's called anyway
-         */
+        /* 
+        * this will be used only if uniqueRenderer != null        
+        * but as is decleared on awake and uniqueRenderer could be modified on the inspector
+        * it's called anyway
+        */
         propBlock = new MaterialPropertyBlock();
     }
 
@@ -35,13 +36,29 @@ public class ClippingPlane : MonoBehaviour
 
         if (uniqueRenderer != null)
         {
-            uniqueRenderer.GetPropertyBlock(propBlock);
-            propBlock.SetVector("_Plane", planeRepresentation);
-            uniqueRenderer.SetPropertyBlock(propBlock);
+            if (clippChilds)
+            {
+                foreach (Transform child in uniqueRenderer.transform)
+                {
+                    if (child.gameObject.activeSelf)
+                        SetPlaneVectorAsPropertyBlock(child.gameObject.GetComponent<Renderer>(), planeRepresentation);
+                }
+            }
+            SetPlaneVectorAsPropertyBlock(uniqueRenderer, planeRepresentation);
         }
         else if (material != null)
         {
             material.SetVector("_Plane", planeRepresentation);
+        }
+    }
+
+    public void SetPlaneVectorAsPropertyBlock(Renderer renderer, Vector4 planeRepresentation)
+    {
+        if (propBlock != null)
+        {
+            renderer.GetPropertyBlock(propBlock);
+            propBlock.SetVector("_Plane", planeRepresentation);
+            renderer.SetPropertyBlock(propBlock);
         }
     }
 
@@ -51,7 +68,7 @@ public class ClippingPlane : MonoBehaviour
         plane = new Plane(transform.up, transform.position);
         Vector3 position = transform.position;
         Vector3 normal = plane.normal;
-        DrawPlane(position,normal);
+        DrawPlane(position, normal);
     }
 
     void DrawPlane(Vector3 position, Vector3 normal)

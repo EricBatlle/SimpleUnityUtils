@@ -34,5 +34,6 @@
 		}
 		ENDCG
 	}
+	//Use Fallback Off to avoid shadows
 	Fallback "Diffuse"
 }
