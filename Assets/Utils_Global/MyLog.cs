@@ -6,55 +6,110 @@ using UnityEngine;
 public class MyLog : MonoBehaviour
 {
     #region CustomLogs
-    public class LogStyle
+    [Serializable]
+    public class LogWindowStyle
     {
         //Log window
-        public float viewWidth = Screen.width * 0.75f;
-        public float viewHeight = Screen.height * 0.35f;
-        public int fontSize = 8;
-
-        public LogStyle()
+        public float viewX = Screen.width / 2.5f;
+        public float viewY = 0;
+        public float viewWidth = Screen.width - Screen.width / 2.5f;
+        public float viewHeight = Screen.height - Screen.height / 1.5f;
+        public float scrollbarWidth = 100f;
+        public float scrollbarHeight = 100f;
+        public int fontSize = 10;
+       
+        #region Constructors
+        public LogWindowStyle()
         {
-            this.viewWidth = Screen.width * 0.75f;
-            this.viewHeight = Screen.height * 0.35f;
-            this.fontSize = 8;
+            this.viewX = Screen.width / 2.5f;
+            this.viewY = 0;
+            this.viewWidth = Screen.width - Screen.width / 2.5f;
+            this.viewHeight = Screen.height - Screen.height / 1.5f;
+            this.scrollbarWidth = viewWidth / 24;
+            this.scrollbarHeight = viewWidth / 24;
         }
-        public LogStyle(float viewWidth, float viewHeight, int fontsize)
+        public LogWindowStyle(int fontSize)
+        {
+            this.viewX = Screen.width / 2.5f;
+            this.viewY = 0;
+            this.viewWidth = Screen.width - Screen.width / 2.5f;
+            this.viewHeight = Screen.height - Screen.height / 1.5f;
+            this.scrollbarWidth = viewWidth / 24;
+            this.scrollbarHeight = viewWidth / 24;
+            this.fontSize = fontSize;
+        }
+        public LogWindowStyle(float viewWidth, float viewHeight, int fontSize)
         {
             this.viewWidth = viewWidth;
             this.viewHeight = viewHeight;
-            this.fontSize = fontsize;
+            this.fontSize = fontSize;
         }
+        public LogWindowStyle(float viewWidth, float viewHeight, float scrollbarWidth, float scrollbarHeight, int fontSize)
+        {
+            this.viewWidth = viewWidth;
+            this.viewHeight = viewHeight;
+            this.scrollbarWidth = scrollbarWidth;
+            this.scrollbarHeight = scrollbarHeight;
+            this.fontSize = fontSize;
+        }
+        public LogWindowStyle(float x, float y, float viewWidth, float viewHeight, float scrollbarWidth, float scrollbarHeight, int fontSize)
+        {
+            this.viewX = x;
+            this.viewY = y;
+            this.viewWidth = viewWidth;
+            this.viewHeight = viewHeight;
+            this.scrollbarWidth = scrollbarWidth;
+            this.scrollbarHeight = scrollbarHeight;
+            this.fontSize = fontSize;
+        }
+        #endregion
     }
+    //PredefinedPositions
+    public enum PredefinedPosition
+    {
+        TopLeft, TopRight, BottomRight, BottomLeft, Custom
+    }
+    public Dictionary<PredefinedPosition, Vector2> PredefinedPositionToVector2Dictionary = new Dictionary<PredefinedPosition, Vector2>()
+    {
+        { PredefinedPosition.Custom, new Vector2(0,0) },
+        { PredefinedPosition.TopLeft, new Vector2(0,0) },
+        { PredefinedPosition.TopRight, new Vector2(Screen.width / 2.5f, 0) },
+        { PredefinedPosition.BottomRight, new Vector2(Screen.width / 2.5f, Screen.height / (1.5f+0.1f)) },
+        { PredefinedPosition.BottomLeft, new Vector2(0, Screen.height / (1.5f+0.1f)) }
+    };
+    //PredefinedDevice
     public enum PredefinedDevice
     {
-        None, Pocophone
+        Default, Pocophone
     }
-    public Dictionary<PredefinedDevice, LogStyle> LogtypeToLogstyleDictionary = new Dictionary<PredefinedDevice, LogStyle>()
+    public Dictionary<PredefinedDevice, LogWindowStyle> PredefinedDeviceToLogWindowStyleDictionary = new Dictionary<PredefinedDevice, LogWindowStyle>()
     {
-        { PredefinedDevice.None, new LogStyle() },
-        { PredefinedDevice.Pocophone, new LogStyle(800,800,70) }
+        { PredefinedDevice.Default, new LogWindowStyle() },
+        { PredefinedDevice.Pocophone, new LogWindowStyle(30) }
     };
     #endregion
 
     [SerializeField] private bool hideLog = false;
-    [SerializeField] private PredefinedDevice predefinedDevice = PredefinedDevice.None;
-    [SerializeField] private Vector2 scrollPosition = new Vector2();
-    [SerializeField] private float viewWidth = 100f;
-    [SerializeField] private float viewHeight = 100f;
-    [SerializeField] private int fontSize = 8;
+    [SerializeField] private PredefinedDevice predefinedDevice = PredefinedDevice.Default;
+    [SerializeField] private PredefinedPosition predefinedPosition = PredefinedPosition.TopRight;
+    [SerializeField] private LogWindowStyle logWindowStyle = new LogWindowStyle();
+    [Space()]
+    [SerializeField] private Color logsColor = Color.white;
+    [SerializeField] private Vector2 customWindowPosition = new Vector2(Screen.width / 2.5f, 0);
     private string myLog;
     private Queue myLogQueue = new Queue();
+    private Vector2 scrollPosition = new Vector2();
 
     private void OnEnable()
     {
         Application.logMessageReceivedThreaded += HandleLog;
+        SetPredefinedPosition(predefinedPosition);
         SetPredefinedStyle(predefinedDevice);
     }
 
     private void OnDisable()
     {
-        Application.logMessageReceivedThreaded -= HandleLog;
+        Application.logMessageReceivedThreaded -= HandleLog;       
     }
 
     void HandleLog(string logString, string stackTrace, LogType type)
@@ -77,7 +132,7 @@ public class MyLog : MonoBehaviour
                 textColor = new Color(252f / 255f, 174f / 255f, 78f / 255f);
                 break;
             case LogType.Log:
-                textColor = Color.white;
+                textColor = Color.black;
                 break;
             case LogType.Exception:
                 textColor = new Color(255f / 255f, 112f / 255f, 112f / 255f);
@@ -108,33 +163,29 @@ public class MyLog : MonoBehaviour
     private void OnGUI()
     {
         #region GUI Styles
-        //Set predefined Style if something is specified, if not, do not force it to let editor tweaking
-        if (predefinedDevice != PredefinedDevice.None)
-        {
-            SetPredefinedStyle(predefinedDevice);
-            //ToDo: make this variable and predefined...too lazy
-            //Scrollbar Style
-            if (predefinedDevice == PredefinedDevice.Pocophone)
-            {
-                GUI.skin.verticalScrollbar.fixedWidth = Screen.width * 0.05f;
-                GUI.skin.verticalScrollbarThumb.fixedWidth = GUI.skin.verticalScrollbar.fixedWidth;
+        //LogWindow Position
+        SetPredefinedPosition(predefinedPosition);
+        //LogWindow Style
+        GUI.skin.verticalScrollbar.fixedWidth = logWindowStyle.scrollbarWidth;
+        GUI.skin.verticalScrollbarThumb.fixedWidth = logWindowStyle.scrollbarWidth;
 
-                GUI.skin.horizontalScrollbar.fixedWidth = viewWidth - GUI.skin.verticalScrollbar.fixedWidth;
-                GUI.skin.horizontalScrollbar.fixedHeight = Screen.height * 0.025f;
-                GUI.skin.horizontalScrollbarThumb.fixedHeight = GUI.skin.horizontalScrollbar.fixedHeight;
-            }
-        }
+        GUI.skin.horizontalScrollbar.fixedWidth = logWindowStyle.viewWidth - GUI.skin.verticalScrollbar.fixedWidth;
+        GUI.skin.horizontalScrollbar.fixedHeight = logWindowStyle.scrollbarHeight;
+        GUI.skin.horizontalScrollbarThumb.fixedHeight = GUI.skin.horizontalScrollbar.fixedHeight;
 
         //Buttons Style
-        GUIStyle guiStyle_button = new GUIStyle(GUI.skin.button);
-        guiStyle_button.fontSize = fontSize;
-        //Logs Style
-        GUIStyle guiStyle_logs = new GUIStyle(UnityEngine.GUI.skin.label)
+        GUIStyle guiStyle_button = new GUIStyle(GUI.skin.button)
         {
+            fontSize = logWindowStyle.fontSize
+        };
+
+        //Logs Style
+        GUIStyle guiStyle_logs = new GUIStyle(GUI.skin.label)
+        {            
             richText = true,
             alignment = TextAnchor.MiddleLeft,
             wordWrap = false,
-            fontSize = fontSize,
+            fontSize = logWindowStyle.fontSize,            
             stretchWidth = true,
             //font = (Font)EditorGUIUtility.LoadRequired("Fonts/Lucida Grande.ttf"),
             //fontStyle = FontStyle.Bold,
@@ -146,11 +197,13 @@ public class MyLog : MonoBehaviour
                 bottom = 0
             },
             clipping = TextClipping.Overflow
+            
         };
         #endregion
 
         if (!hideLog)
         {
+            GUI.BeginGroup(new Rect(logWindowStyle.viewX, logWindowStyle.viewY, logWindowStyle.viewWidth, Screen.height));
             #region HorizontalLayout
             GUILayout.BeginHorizontal();
             if (GUILayout.Button("Clear", guiStyle_button))
@@ -161,33 +214,40 @@ public class MyLog : MonoBehaviour
             if (GUILayout.Button("Hide", guiStyle_button))
                 hideLog = true;
             if (GUILayout.Button("+", guiStyle_button))
-                fontSize += 10;
+                logWindowStyle.fontSize += 10;
             if (GUILayout.Button("-", guiStyle_button))
             {
-                if (fontSize > 10)
-                    fontSize -= 10;
+                if (logWindowStyle.fontSize > 10)
+                    logWindowStyle.fontSize -= 10;
             }
             GUILayout.EndHorizontal();
             #endregion
             #region ScrollView
-            scrollPosition = GUILayout.BeginScrollView(scrollPosition, GUILayout.Width(viewWidth), GUILayout.Height(viewHeight));
+            scrollPosition = GUILayout.BeginScrollView(scrollPosition, GUILayout.Width(logWindowStyle.viewWidth), GUILayout.Height(logWindowStyle.viewHeight));
 
             GUILayout.Label(myLog, guiStyle_logs);
             GUILayout.EndScrollView();
             #endregion
+            GUI.EndGroup();
         }
         else
         {
+            GUI.BeginGroup(new Rect(logWindowStyle.viewX, logWindowStyle.viewY, logWindowStyle.viewWidth, Screen.height));
             if (GUILayout.Button("Show Log", guiStyle_button))
                 hideLog = false;
+            GUI.EndGroup();
         }
     }
 
     private void SetPredefinedStyle(PredefinedDevice predefinedDevice)
     {
-        LogStyle deviceStyle = LogtypeToLogstyleDictionary[predefinedDevice];
-        this.fontSize = deviceStyle.fontSize;
-        this.viewHeight = deviceStyle.viewHeight;
-        this.viewWidth = deviceStyle.viewHeight;
+        logWindowStyle = PredefinedDeviceToLogWindowStyleDictionary[predefinedDevice];        
+    }
+    private void SetPredefinedPosition(PredefinedPosition predefinedPosition)
+    {
+        Vector2 windowPosition = new Vector2();
+        windowPosition = (predefinedPosition == PredefinedPosition.Custom) ? customWindowPosition : PredefinedPositionToVector2Dictionary[predefinedPosition];
+        logWindowStyle.viewX = windowPosition.x;
+        logWindowStyle.viewY = windowPosition.y;
     }
 }
