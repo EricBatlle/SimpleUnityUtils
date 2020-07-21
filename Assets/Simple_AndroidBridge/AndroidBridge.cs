@@ -20,6 +20,20 @@ public abstract class AndroidBridge : MonoBehaviour
     protected abstract void OnGetResults(string[] results);
 
     #region AndroidCall Utility Methods
+    //Android Call
+    public void AndroidCall(string method, params object[] args)
+    {
+        using (AndroidJavaClass jc = new AndroidJavaClass("com.unity3d.player.UnityPlayer"))
+        {
+            using (AndroidJavaObject jo = jc.GetStatic<AndroidJavaObject>("currentActivity"))
+            {
+                if (args != null)
+                    jo.Call(method, args);
+                else
+                    jo.Call(method);
+            }
+        }
+    }
     public T AndroidCall<T>(string method, params object[] args)
     {
         using (AndroidJavaClass jc = new AndroidJavaClass("com.unity3d.player.UnityPlayer"))
@@ -34,20 +48,7 @@ public abstract class AndroidBridge : MonoBehaviour
         }
     }
 
-    public void AndroidCall(string method, params object[] args)
-    {
-        using (AndroidJavaClass jc = new AndroidJavaClass("com.unity3d.player.UnityPlayer"))
-        {
-            using (AndroidJavaObject jo = jc.GetStatic<AndroidJavaObject>("currentActivity"))
-            {
-                if (args != null)
-                    jo.Call(method, args);
-                else
-                    jo.Call(method);
-            }
-        }
-    }
-
+    //Android Static Call
     public void AndroidStaticCall(string method, params object[] args)
     {
         using (AndroidJavaClass jc = new AndroidJavaClass("com.unity3d.player.UnityPlayer"))
@@ -61,7 +62,21 @@ public abstract class AndroidBridge : MonoBehaviour
             }
         }
     }
+    public T AndroidStaticCall<T>(string method, params object[] args)
+    {
+        using (AndroidJavaClass jc = new AndroidJavaClass("com.unity3d.player.UnityPlayer"))
+        {
+            using (AndroidJavaObject jo = jc.GetStatic<AndroidJavaObject>("currentActivity"))
+            {
+                if (args != null)
+                    return jo.CallStatic<T>(method, args);
+                else
+                    return jo.CallStatic<T>(method);
+            }
+        }
+    }
 
+    //Android Runnable Call
     public void AndroidRunnableCall(string method, params object[] args)
     {
         using (AndroidJavaClass jc = new AndroidJavaClass("com.unity3d.player.UnityPlayer"))
