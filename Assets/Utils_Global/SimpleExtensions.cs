@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 /// <summary>
@@ -48,27 +49,36 @@ public static class SimpleExtensions
     }
     #endregion
 
-    #region Color
-    public static void SetAlpha(this RawImage rawImage, float alphaValue)
+    #region Events
+    public static void AddListener(this EventTrigger trigger, EventTriggerType eventType, System.Action<PointerEventData> listener)
+    {
+        EventTrigger.Entry entry = new EventTrigger.Entry();
+        entry.eventID = eventType;
+        entry.callback.AddListener(data => listener.Invoke((PointerEventData)data));
+        trigger.triggers.Add(entry);
+    }
+    #endregion
+
+    #region Color/Alpha
+    public static float ToNormalizedAlphaValue(this float alphaValue)
     {
         if (alphaValue > 1)
             alphaValue /= 255;
         if (alphaValue < 0)
             alphaValue = 0;
+        return alphaValue;
+    }
 
+    public static void SetAlpha(this RawImage rawImage, float alphaValue)
+    {
         Color auxColor = rawImage.color;
-        auxColor.a = alphaValue;
+        auxColor.a = alphaValue.ToNormalizedAlphaValue();
         rawImage.color = auxColor;
     }
     public static void SetAlpha(this Image image, float alphaValue)
     {
-        if (alphaValue > 1)
-            alphaValue /= 255;
-        if (alphaValue < 0)
-            alphaValue = 0;
-
         Color auxColor = image.color;
-        auxColor.a = alphaValue;
+        auxColor.a = alphaValue.ToNormalizedAlphaValue();
         image.color = auxColor;
     }
     #endregion
