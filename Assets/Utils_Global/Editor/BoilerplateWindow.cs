@@ -2,30 +2,23 @@
 using System.IO;
 using UnityEditor;
 using UnityEngine;
-
 public abstract class BoilerplateWindow : EditorWindow
 {
-    protected static string boilerplateWindowName = "BoilerplateWindow";
-    protected static string boilerplateProjectName = "BoilerplateProject";
-
-    [MenuItem("Window/BoilerplateWindow")]
-    public static void ShowWindow()
-    {
-        GetWindow<BoilerplateWindow>(boilerplateWindowName);
-    }
+    protected static string boilerplateWindowName = "Boilerplate Window";
 
     protected virtual void OnGUI()
     {
-        GUILayout.Label("Create fast new boilerplate scripts", EditorStyles.boldLabel);
+        GenerateBoilerplateUI();
 
         if (GUILayout.Button("Generate Boilerplate"))
         {
-            GenerateBoilerplateElements();
-            Debug.Log("<b>Generated " + boilerplateProjectName + " directories and scripts</b>");
+            if(GenerateBoilerplateElements())
+            {
+                Debug.Log("<b>Generated " + BoilerplateProjectName + " directories and scripts</b>");
+                AssetDatabase.Refresh();
+            }
         }
     }
-
-    protected abstract void GenerateBoilerplateElements();
 
     protected void CreateDirectory(string path)
     {
@@ -75,4 +68,15 @@ public abstract class BoilerplateWindow : EditorWindow
         }
     }
 
+    protected abstract string BoilerplateProjectName { get; set; }
+    protected abstract void GenerateBoilerplateUI();
+    protected abstract bool GenerateBoilerplateElements();
+
+    /*
+    [MenuItem("Window/BoilerplateWindow")]
+    public static void ShowWindow()
+    {
+        GetWindow<BoilerplateWindow>(boilerplateWindowName);
+    }
+    */
 }
