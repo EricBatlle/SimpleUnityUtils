@@ -27,7 +27,7 @@ public class PluginBoilerplateWindow : BoilerplateWindow
         GUILayout.Label("Plugin scripts name", EditorStyles.centeredGreyMiniLabel);
         GUILayout.BeginHorizontal();
         GUILayout.Label("PluginName", EditorStyles.boldLabel);
-        pluginName = EditorGUILayout.TextField("NativeToolkit");
+        pluginName = EditorGUILayout.TextField(pluginName);
         GUILayout.EndHorizontal();
 
         EditorGUILayout.Space();
@@ -66,28 +66,32 @@ public class PluginBoilerplateWindow : BoilerplateWindow
             return false;
         }
         string pluginDirectoryPath = $"Assets/Plugins/{pluginName}";
+        string pluginScriptsDirectoryPath = $"Assets/Scripts/Plugins/{pluginName}";
         string pluginAndroidDirectoryPath = $"Assets/Plugins/{pluginName}/Android";
         string pluginiOSDirectoryPath = $"Assets/Plugins/{pluginName}/iOS";
 
-        //Create main directory
+        //Create main directories
         CreateDirectory(pluginDirectoryPath);
-        CreateFile($"{pluginDirectoryPath}/{pluginName}.cs", GeneratePluginMonoBehaviourScript());
-        CreateFile($"{pluginDirectoryPath}/{pluginName}Plugin.cs", GeneratePluginScript());
+        CreateDirectory(pluginScriptsDirectoryPath);
 
-        //Create platform-dependant directories
+        //Create main scripts
+        CreateFile($"{pluginScriptsDirectoryPath}/{pluginName}.cs", GeneratePluginMonoBehaviourScript());
+        CreateFile($"{pluginScriptsDirectoryPath}/{pluginName}Plugin.cs", GeneratePluginScript());
+
+        //Create platform-dependant scripts and directories
         if (hasAndroidVersion)
         {
             CreateDirectory(pluginAndroidDirectoryPath);
-            CreateFile($"{pluginAndroidDirectoryPath}/{pluginName}Plugin_Android.cs", GeneratePluginScript_Android());
+            CreateFile($"{pluginScriptsDirectoryPath}/{pluginName}Plugin_Android.cs", GeneratePluginScript_Android());
         }
         if (hasiOSVersion)
         {
             CreateDirectory(pluginiOSDirectoryPath);
-            CreateFile($"{pluginiOSDirectoryPath}/{pluginName}Plugin_iOS.cs", GeneratePluginScript_iOS());
+            CreateFile($"{pluginScriptsDirectoryPath}/{pluginName}Plugin_iOS.cs", GeneratePluginScript_iOS());
         }
         if (hasEditorVersion)
         {
-            CreateFile($"{pluginDirectoryPath}/{pluginName}Plugin_Editor.cs", GeneratePluginScript_Editor());
+            CreateFile($"{pluginScriptsDirectoryPath}/{pluginName}Plugin_Editor.cs", GeneratePluginScript_Editor());
         }
         return true;
     }
