@@ -59,6 +59,101 @@ public static class SimpleExtensions
     }
     #endregion
 
+    #region Texture/Texture2D
+    //Convert Texture2DToSprite
+    public static Sprite ConvertTexture2DToSprite(this Texture2D texture)
+    {
+        return Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), Vector2.zero);
+    }
+
+    #region Rotate90   
+    //Grab Texture2D and return the same texture rotated 90 degrees clockwise
+    public static Texture2D RotateTexture90(Texture2D source, bool clockwise, bool affectOriginalResource = false)
+    {
+        Color32[] colorSource = source.GetPixels32();
+        Color32[] colorResult = new Color32[colorSource.Length];
+
+        int count = 0;
+        int newWidth = source.height;
+        int newHeight = source.width;
+        int index = 0;
+
+        for (int i = 0; i < source.width; i++)
+        {
+            for (int j = 0; j < source.height; j++)
+            {
+                if (clockwise)
+                    index = (source.width * (j + 1)) - (i + 1);
+                else
+                    index = (source.width * (source.height - j)) - source.width + i;
+
+                colorResult[count] = colorSource[index];
+                count++;
+            }
+        }
+
+        if (affectOriginalResource)
+        {
+            source.Resize(newWidth, newHeight);
+            source.SetPixels32(colorResult);
+            source.Apply();
+            return source;
+        }
+        else
+        {
+            Texture2D rotatedTexture = new Texture2D(newWidth, newHeight);
+            rotatedTexture.SetPixels32(colorResult);
+            rotatedTexture.Apply();
+            return rotatedTexture;
+        }
+
+    }
+    //Grab Texture and return the same texture rotated 90 degrees clockwise
+    public static Texture2D RotateTexture90(Texture originalTexture, bool clockwise, bool affectOriginalResource = false)
+    {
+        Texture2D source = (Texture2D)originalTexture;
+        Color32[] colorSource = source.GetPixels32();
+        Color32[] colorResult = new Color32[colorSource.Length];
+
+        int count = 0;
+        int newWidth = source.height;
+        int newHeight = source.width;
+        int index = 0;
+
+        for (int i = 0; i < source.width; i++)
+        {
+            for (int j = 0; j < source.height; j++)
+            {
+                if (clockwise)
+                    index = (source.width * (j + 1)) - (i + 1);
+                else
+                    index = (source.width * (source.height - j)) - source.width + i;
+
+                colorResult[count] = colorSource[index];
+                count++;
+            }
+        }
+
+        if (affectOriginalResource)
+        {
+            source.Resize(newWidth, newHeight);
+            source.SetPixels32(colorResult);
+            source.Apply();
+            return source;
+        }
+        else
+        {
+            Texture2D rotatedTexture = new Texture2D(newWidth, newHeight);
+            rotatedTexture.SetPixels32(colorResult);
+            rotatedTexture.Apply();
+            return rotatedTexture;
+        }
+
+    }
+    #endregion
+    
+    #endregion
+
     #region Color/Alpha
     public static float ToNormalizedAlphaValue(this float alphaValue)
     {
